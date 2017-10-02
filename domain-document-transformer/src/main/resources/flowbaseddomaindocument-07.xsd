@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ecc="etso-core-cmpts.xsd" xmlns:fb="flowbased" targetNamespace="flowbased" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="etso-core-cmpts.xsd" schemaLocation="etso-core-cmpts.xsd"/>
+	<simpleType name="Direction_Type1">
+		<restriction base="string">
+			<enumeration value="MONODIR"/>
+			<enumeration value="DIRECT"/>
+			<enumeration value="OPPOSITE"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="ActionSetType_Type">
+		<restriction base="string">
+			<enumeration value="PREVENTIVE"/>
+			<enumeration value="CURATIVE"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="MinMax_Type">
+		<restriction base="string">
+			<enumeration value="MIN"/>
+			<enumeration value="MAX"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="BranchStatus_Type">
+		<restriction base="string">
+			<enumeration value="OK"/>
+			<enumeration value="OUT"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="OutageStatus_Type">
+		<restriction base="string">
+			<enumeration value="N-K"/>
+			<enumeration value="N"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="RemedialActionApply_Type">
+		<restriction base="string">
+			<enumeration value="Applied"/>
+			<enumeration value="NotApplied"/>
+		</restriction>
+	</simpleType>
+	<element name="FlowBasedDomainDocument">
+		<complexType>
+			<sequence>
+				<element name="DocumentIdentification" type="ecc:IdentificationType"/>
+				<element name="DocumentVersion" type="ecc:VersionType"/>
+				<element name="DocumentType" type="ecc:MessageType"/>
+				<element name="ProcessType" type="ecc:ProcessType"/>
+				<element name="SenderIdentification" type="ecc:PartyType"/>
+				<element name="SenderRole" type="ecc:RoleType"/>
+				<element name="ReceiverIdentification" type="ecc:PartyType"/>
+				<element name="ReceiverRole" type="ecc:RoleType"/>
+				<element name="CreationDateTime" type="ecc:MessageDateTimeType"/>
+				<element name="FlowBasedDomainTimeInterval" type="ecc:TimeIntervalType"/>
+				<element name="Domain" type="ecc:AreaType"/>
+				<element name="FlowBasedDomainTimeSeries" type="fb:FlowBasedDomainTimeSeries_Type" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attribute name="DtdVersion" type="string" use="required"/>
+			<attribute name="DtdRelease" type="string" use="required"/>
+		</complexType>
+	</element>
+	<complexType name="FlowBasedDomainTimeSeries_Type">
+		<sequence>
+			<element name="TimeSeriesIdentification" type="ecc:IdentificationType"/>
+			<element name="BusinessType" type="ecc:BusinessType"/>
+			<element name="Product" type="ecc:EnergyProductType"/>
+			<element name="BalanceArea" type="ecc:AreaType"/>
+			<element name="Period" type="fb:Period_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="Period_Type">
+		<sequence>
+			<element name="TimeInterval" type="ecc:TimeIntervalType"/>
+			<element name="Resolution" type="ecc:ResolutionType"/>
+			<element name="Interval" type="fb:Interval_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="Interval_Type">
+		<sequence>
+			<element name="Pos" type="ecc:PositionType"/>
+			<element name="FlowBasedDomain" type="fb:FlowBasedDomain_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="FlowBasedDomain_Type">
+		<sequence>
+			<element name="constraintResults" type="fb:ConstResults_Type" minOccurs="0"/>
+			<element name="volume" type="float" minOccurs="0"/>
+			<element name="vertices" type="fb:Vertices_Type" minOccurs="0"/>
+			<element name="maxBexs" type="fb:MaxBexs_Type" minOccurs="0"/>
+			<element name="limitNetPositions" type="fb:LimitNetPositions_Type" minOccurs="0"/>
+			<element name="networkName" type="string" minOccurs="0"/>
+			<element name="slackNode" type="string" minOccurs="0"/>
+		</sequence>
+		<attribute name="name" type="string" use="required"/>
+		<attribute name="id" type="string" use="optional"/>
+	</complexType>
+	<complexType name="ConstResults_Type">
+		<sequence>
+			<element name="constraintResult" type="fb:ConstResult_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="ConstResult_Type">
+		<sequence>
+			<element name="criticalBranch" type="fb:CriticalBranch_Type" minOccurs="0"/>
+			<element name="ptdfs" type="fb:Ptdfs_Type" minOccurs="0"/>
+			<element name="z2zPtdfs" type="fb:Z2zPtdfs_Type" minOccurs="0"/>
+			<element name="domainLimit" type="fb:DomainLimit_Type" minOccurs="0" maxOccurs="1"/>
+		</sequence>
+		<attribute name="name" type="string" use="required"/>
+		<attribute name="id" type="string" use="optional"/>
+		<attribute name="type" type="fb:ConstraintType_Type"/>
+	</complexType>
+	<simpleType name="ConstraintType_Type">
+		<restriction base="string">
+			<enumeration value="BRANCH"/>
+			<enumeration value="NET_POSITION"/>
+		</restriction>
+	</simpleType>
+	<complexType name="Ptdfs_Type">
+		<sequence>
+			<element name="ptdf" type="fb:Ptdf_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="Z2zPtdfs_Type">
+		<sequence>
+			<element name="z2zPtdf" type="fb:Z2zPtdf_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="DomainLimit_Type">
+		<sequence>
+			<element name="region" type="boolean" minOccurs="0"/>
+			<element name="tso" type="boolean" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="CriticalBranch_Type">
+		<sequence>
+			<element name="complexVariant" type="fb:ComplexVariant_Type" minOccurs="0"/>
+			<element name="monitoredBranch" type="fb:MonitoredBranch_Type" minOccurs="0"/>
+			<element name="branchStatus" type="fb:BranchStatus_Type" minOccurs="0"/>
+			<element name="branchStatusReason" type="string" minOccurs="0"/>
+			<element name="direction" type="fb:Direction_Type1" minOccurs="1"/>
+			<element name="duration" type="integer" minOccurs="0"/>
+			<element name="fav" type="float" minOccurs="0"/>
+			<element name="ltaMargin" type="float" minOccurs="0"/>
+			<element name="fMax" type="float" minOccurs="0"/>
+			<element name="fRef" type="float" minOccurs="0"/>
+			<element name="frmMw" type="float" minOccurs="0"/>
+			<element name="iMaxA" type="float" minOccurs="0"/>
+			<element name="smv" type="float" minOccurs="0"/>
+			<element name="originalID" type="string" minOccurs="0"/>
+			<element name="originalName" type="string" minOccurs="0"/>
+			<element name="outage" type="fb:Outage_Type" minOccurs="0"/>
+			<element name="ram" type="float" minOccurs="0"/>
+			<element name="threshold" type="string" minOccurs="0"/>
+			<element name="tsoOrigin" type="fb:Name_Type"/>
+			<element name="version" type="integer"/>
+			<element name="ShadowPriceAmount" type="ecc:AmountType" minOccurs="0"/>
+		</sequence>
+		<attribute name="name" type="string" use="required"/>
+		<attribute name="id" type="string" use="optional"/>
+		<attribute name="blackflag" type="boolean"/>
+	</complexType>
+	<complexType name="Outage_Type">
+		<sequence>
+			<element name="Status" type="fb:OutageStatus_Type" minOccurs="0"/>
+		</sequence>
+		<attribute name="name" type="string" use="required"/>
+		<attribute name="id" type="string" use="optional"/>
+	</complexType>
+	<complexType name="ComplexVariant_Type">
+		<sequence>
+			<element name="actionSets" type="fb:ActionSets_Type" minOccurs="0"/>
+		</sequence>
+		<attribute name="name" type="string" use="required"/>
+		<attribute name="id" type="string" use="optional"/>
+	</complexType>
+	<complexType name="ActionSets_Type">
+		<sequence>
+			<element name="actionSet" type="fb:ActionSet_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="ActionSet_Type">
+		<sequence>
+			<element name="type" type="fb:ActionSetType_Type" minOccurs="0"/>
+			<element name="status" type="fb:RemedialActionApply_Type" minOccurs="0"/>
+		</sequence>
+		<attribute name="name" type="string" use="required"/>
+		<attribute name="id" type="string" use="optional"/>
+	</complexType>
+	<complexType name="MonitoredBranch_Type">
+		<sequence>
+			<element name="inGrid" type="fb:Branch_Type" minOccurs="0"/>
+			<element name="specified" type="fb:Branch_Type" minOccurs="0"/>
+		</sequence>
+		<attribute name="name" type="string" use="optional"/>
+	</complexType>
+	<complexType name="Branch_Type">
+		<sequence>
+			<element name="from" type="fb:Node_Type"/>
+			<element name="to" type="fb:Node_Type"/>
+			<element name="elementName" type="string" minOccurs="0"/>
+			<element name="order" type="string" minOccurs="0"/>
+		</sequence>
+		<attribute name="id" type="string" use="optional"/>
+	</complexType>
+	<simpleType name="TypeConstraint">
+		<restriction base="string">
+			<enumeration value="criticalBranch"/>
+			<enumeration value="external"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="Name_Type">
+		<restriction base="string">
+			<pattern value="[A-Z0-9]{2}"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="NodeName_Type">
+		<restriction base="string">
+			<pattern value=".{6}\d(\p{L}|\d| )?"/>
+		</restriction>
+	</simpleType>
+	<complexType name="Node_Type">
+		<attribute name="name" type="fb:NodeName_Type" use="required"/>
+		<attribute name="id" type="string" use="optional"/>
+	</complexType>
+	<complexType name="Ptdf_Type">
+		<sequence>
+			<element name="hub" type="fb:Hub_Type"/>
+			<element name="value" type="float"/>
+		</sequence>
+	</complexType>
+	<complexType name="Z2zPtdf_Type">
+		<sequence>
+			<element name="from" type="fb:Hub_Type"/>
+			<element name="to" type="fb:Hub_Type"/>
+			<element name="value" type="float"/>
+		</sequence>
+	</complexType>
+	<complexType name="Hub_Type">
+		<attribute name="name" type="fb:Name_Type" use="required"/>
+		<attribute name="id" type="string" use="optional"/>
+	</complexType>
+	<complexType name="Vertices_Type">
+		<sequence>
+			<element name="vertex" type="fb:Vertex_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="Vertex_Type">
+		<sequence>
+			<element name="coordinates" type="fb:Coordinates_Type" minOccurs="0"/>
+			<element name="constraints" type="fb:Constraints_Type" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="Coordinates_Type">
+		<sequence>
+			<element name="coordinate" type="fb:Coordinate_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="Coordinate_Type">
+		<sequence>
+			<element name="hub" type="fb:Hub_Type"/>
+			<element name="value" type="float"/>
+		</sequence>
+	</complexType>
+	<complexType name="Constraints_Type">
+		<sequence>
+			<element name="constraintResult" type="fb:ConstResult_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="MaxBexs_Type">
+		<sequence>
+			<element name="maxbex" type="fb:MaxBex_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="MaxBex_Type">
+		<sequence>
+			<element name="constraints" type="fb:Constraints_Type" minOccurs="0" maxOccurs="unbounded"/>
+			<element name="fromhub" type="fb:Hub_Type"/>
+			<element name="tohub" type="fb:Hub_Type"/>
+			<element name="value" type="float"/>
+		</sequence>
+	</complexType>
+	<complexType name="LimitNetPositions_Type">
+		<sequence>
+			<element name="limitnetposition" type="fb:LimitNetPosition_Type" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="LimitNetPosition_Type">
+		<sequence>
+			<element name="coordinates" type="fb:Coordinates_Type" minOccurs="0"/>
+			<element name="constraints" type="fb:Constraints_Type" minOccurs="0"/>
+			<element name="type" type="fb:MinMax_Type"/>
+			<element name="hub" type="fb:Hub_Type"/>
+		</sequence>
+	</complexType>
+</schema>
